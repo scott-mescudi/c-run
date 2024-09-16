@@ -16,9 +16,48 @@ This is a Go-based command-line utility designed to compile and run C programs u
 - **GCC**: The GNU Compiler Collection (GCC) must be installed on your system to compile C programs.
 - **Operating System**: While the code uses the `.exe` extension, it can be easily adapted to work on non-Windows platforms by changing the file extension.
 
+
+
+## Building the Go Program
+
+To build the Go-based C Program Runner utility from the source code, follow the steps below:
+
+### Prerequisites
+
+- **Go**: Make sure Go is installed. You can download it from [here](https://golang.org/dl/).
+- **GCC**: Ensure GCC is installed for compiling the C programs.
+
+### Build Instructions
+
+- **Navigate to the project directory** where the Go source file (`C-run.go`) is located.
+
+- **Build the Go program** using the following command:
+
+   ```bash
+   go build C-run.go -o c.exe
+   ```
+
+   This will generate an executable named `c.exe` in the current directory.
+
+- **Move the executable** to a location in your system's PATH so that it can be run from anywhere. Use the following command to move the executable:
+
+   ```bash
+   mv c.exe $path
+   ```
+
+   Replace `$path` with the directory where you want to place the `c.exe` executable (e.g., `/usr/local/bin/` on Linux/Mac or a path in your Windows environment variables).
+
+### Example
+
+To move the `c.exe` to `/usr/local/bin/` on Linux/Mac, you would run:
+
+```bash
+mv c.exe /usr/local/bin/
+```
+
 ## Usage
 
-### Command Structure
+
 
 ```
 c <command> <filename>
@@ -26,7 +65,7 @@ c <command> <filename>
 
 ### Commands
 
-1. **`run`**:
+- **`run`**:
    - Compiles and runs the specified C program.
    - Automatically removes the compiled executable after execution.
 
@@ -40,7 +79,7 @@ c <command> <filename>
    c run hello.c
    ```
 
-2. **`build`**:
+- **`build`**:
    - Compiles the specified C program without running it.
    - The compiled executable remains in the working directory.
 

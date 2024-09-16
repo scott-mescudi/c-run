@@ -14,6 +14,13 @@ func getPath(filename string) (dir string ,exefilename string ,err error){
 		return "", "", fmt.Errorf("cannot find %s", filename)
 	}
 
+
+	ext := filepath.Ext(filename)
+	if ext != ".c" {
+        return "", "", fmt.Errorf("%s is not a C file", filename)
+    }
+	
+
 	exefilename = strings.TrimSuffix(filename, ".c")
 	dir = filepath.Dir(exefilename)
 
@@ -48,11 +55,7 @@ func runCProgram(clean bool ,ext string) error {
 		cmd.Stdout = os.Stdout
 		cmd.Stdin = os.Stdin
 		cmd.Stderr = os.Stderr
-		fmt.Println(cmd)
-		err = cmd.Run()
-		if err!= nil {
-			return fmt.Errorf("error running compiled program")
-		}
+		cmd.Run()
 		
 
 		err := os.Remove(exefilename+ext)

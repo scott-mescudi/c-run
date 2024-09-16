@@ -16,7 +16,7 @@ func getPath(filename string) (dir string ,exefilename string ,err error){
 
 
 	ext := filepath.Ext(filename)
-	if ext != ".c" {
+	if ext != ".c"{
         return "", "", fmt.Errorf("%s is not a C file", filename)
     }
 	
@@ -27,45 +27,47 @@ func getPath(filename string) (dir string ,exefilename string ,err error){
 	return dir, exefilename, nil
 }
 
-func runCProgram(clean bool ,ext string) error {
-	if len(os.Args) != 3{
+func runCProgram(clean bool, ext string) error {
+	if len(os.Args) < 3 { 
 		return fmt.Errorf("error: missing filename")
 	}
 
 	filename := os.Args[2]
 	dir, exefilename, err := getPath(filename)
-	if err != nil{
-		return fmt.Errorf("error: cannot find %v ", filename)
+	if err != nil {
+		return fmt.Errorf("error: %v", err)
 	}
 
-
 	cmd := exec.Command("gcc", filename, "-o", exefilename)
-    err = cmd.Run()
-    if err != nil {
-        return fmt.Errorf("error compiling C code")
-    }
-	
-	if clean{
+	err = cmd.Run()
+	if err != nil {
+		return fmt.Errorf("error compiling C code")
+	}
+
+	if clean {
 		if dir == "." {
-			cmd = exec.Command("./"+exefilename+ext)
-		}else{
-			cmd = exec.Command(exefilename+ext)
+			cmd = exec.Command("./" + exefilename + ext)
+		} else {
+			cmd = exec.Command(exefilename + ext)
 		}
 
 		cmd.Stdout = os.Stdout
 		cmd.Stdin = os.Stdin
 		cmd.Stderr = os.Stderr
-		cmd.Run()
-		
+		err = cmd.Run()  
+		if err != nil {
+			return fmt.Errorf("error executing compiled program: %v", err)
+		}
 
-		err := os.Remove(exefilename+ext)
-		if err!= nil {
-            fmt.Printf("error cleaning up compiled program")
-        }
+		err = os.Remove(exefilename + ext)
+		if err != nil {
+			fmt.Printf("error cleaning up compiled program")
+		}
 	}
-	
+
 	return nil
 }
+
 
 func main() {
 	if len(os.Args) < 2{

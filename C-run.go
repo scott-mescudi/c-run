@@ -5,22 +5,20 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strings"
 	"runtime"
+	"strings"
 )
 
-func getPath(filename string) (dir string ,exefilename string ,err error){
+func getPath(filename string) (dir string, exefilename string, err error) {
 	_, err = os.Stat(filename)
 	if err != nil {
 		return "", "", fmt.Errorf("cannot find %s", filename)
 	}
 
-
 	ext := filepath.Ext(filename)
-	if ext != ".c"{
-        return "", "", fmt.Errorf("%s is not a C file", filename)
-    }
-	
+	if ext != ".c" {
+		return "", "", fmt.Errorf("%s is not a C file", filename)
+	}
 
 	exefilename = strings.TrimSuffix(filename, ".c")
 	dir = filepath.Dir(exefilename)
@@ -28,38 +26,36 @@ func getPath(filename string) (dir string ,exefilename string ,err error){
 	return dir, exefilename, nil
 }
 
-func runCProgram(clean bool, ext string) error {
-	filename := os.Args[2]
-	dir, exefilename, err := getPath(filename)
-	if err != nil {
-		return fmt.Errorf("error: %v", err)
-	}
-
+func build(filename, exefilename string) error {
 	cmd := exec.Command("gcc", filename, "-o", exefilename)
-	err = cmd.Run()
+	err := cmd.Run()
 	if err != nil {
 		return fmt.Errorf("error compiling C code")
 	}
 
-	if clean {
-		if dir == "." {
-			cmd = exec.Command("./" + exefilename + ext)
-		} else {
-			cmd = exec.Command(exefilename + ext)
-		}
+	return nil
+}
 
-		cmd.Stdout = os.Stdout
-		cmd.Stdin = os.Stdin
-		cmd.Stderr = os.Stderr
-		err = cmd.Run()  
-		if err != nil {
-			return fmt.Errorf("error executing compiled program: %v", err)
-		}
+func runExecutable(dir, exefilename, ext string) error {
+	var command string
+	if dir == "." {
+		command = "./" + exefilename + ext
+	} else {
+		command = exefilename + ext
+	}
 
-		err = os.Remove(exefilename + ext)
-		if err != nil {
-			fmt.Printf("error cleaning up compiled program")
-		}
+	cmd := exec.Command(command)
+	cmd.Stdout = os.Stdout
+	cmd.Stdin = os.Stdin
+	cmd.Stderr = os.Stderr
+	err := cmd.Run()
+	if err != nil {
+		return fmt.Errorf("error executing compiled program: %v", err)
+	}
+
+	err = os.Remove(exefilename + ext)
+	if err != nil {
+		fmt.Printf("error cleaning up compiled program")
 	}
 
 	return nil
@@ -78,17 +74,16 @@ func getExecutableExtension() string {
 }
 
 func main() {
-	if len(os.Args) < 2{
+	if len(os.Args) < 2 {
 		fmt.Println("Error: please provide a flag")
-		return
-	} 
-
-	compiler  := "gcc"
-	if !isProgramInstalled(compiler){
-		fmt.Println("gcc is not installed")
 		return
 	}
 
+	compiler := "gcc"
+	if !isProgramInstalled(compiler) {
+		fmt.Println("gcc is not installed")
+		return
+	}
 
 	command := os.Args[1]
 	if len(os.Args) < 3 && (command == "run" || command == "build") {
@@ -96,21 +91,32 @@ func main() {
 		return
 	}
 
-	
+	filename := os.Args[2]
 
+	dir, exefilename, err := getPath(filename)
+	if err != nil {
+		fmt.Printf("error: %v", err)
+		return
+	}
 	exeType := getExecutableExtension()
 
 	switch command {
 	case "run":
-		err := runCProgram(true, exeType)
+		err := build(filename, exefilename)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		err = runExecutable(dir, exefilename, exeType)
 		if err != nil {
 			fmt.Println(err)
 		}
 	case "build":
-		err := runCProgram(false, exeType)
-        if err!= nil {
-            fmt.Println(err)
-        }
+		err := build(filename, exefilename)
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Printf("Executable built: %s%s\n", exefilename, exeType)
 	default:
 		fmt.Println("Error: Unknown command")
 	}

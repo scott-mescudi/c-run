@@ -85,7 +85,6 @@ func main() {
         if err!= nil {
             fmt.Println(err)
         }
-    case "clean":
 	default:
 		fmt.Println("Error: Unknown command")
 	}

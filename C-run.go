@@ -74,7 +74,7 @@ func getExecutableExtension() string {
 	if runtime.GOOS == "windows" {
 		return ".exe"
 	}
-	return ""
+	return ".sh"
 }
 
 func main() {

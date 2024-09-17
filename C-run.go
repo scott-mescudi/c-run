@@ -108,15 +108,15 @@ func main() {
 			fmt.Println(err)
 		}
 
-		start :=  time.Now()
+		start := time.Now()
 		err = runExecutable(dir, exefilename, exeType)
 		elapsed := time.Since(start)
 		if err != nil {
 			fmt.Println(err)
 		}
-		
+
 		fmt.Printf("\nExecution time: %v\n", elapsed)
-		
+
 	case "build":
 		err := build(filename, exefilename)
 		if err != nil {

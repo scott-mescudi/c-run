@@ -11,14 +11,14 @@ import (
 )
 
 func getPath(filename string) (dir string, exefilename string, err error) {
-	_, err = os.Stat(filename)
-	if err != nil {
-		return "", "", fmt.Errorf("cannot find %s", filename)
-	}
-
 	ext := filepath.Ext(filename)
 	if ext != ".c" {
 		return "", "", fmt.Errorf("%s is not a C file", filename)
+	}
+
+	_, err = os.Stat(filename)
+	if err != nil {
+		return "", "", fmt.Errorf("cannot find %s", filename)
 	}
 
 	exefilename = strings.TrimSuffix(filename, ".c")

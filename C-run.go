@@ -6,6 +6,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"sync"
 )
 
 func getPath(filename string) (dir string ,exefilename string ,err error){
@@ -68,20 +69,56 @@ func runCProgram(clean bool, ext string) error {
 	return nil
 }
 
+func isProgramInstalled(program string) bool {
+	_, err := exec.LookPath(program)
+	return err == nil
+}
 
 func main() {
 	if len(os.Args) < 2{
 		fmt.Println("Error: please provide a flag")
 		return
 	} 
+
+	var(
+	wg sync.WaitGroup
+	exeType string
+	compiler string = "gcc"
+	ch1 = make(chan bool)
+	)
+
+	wg.Add(1)
+	go func(compiler string){
+		defer wg.Done()
+		ch1 <- isProgramInstalled(compiler)
+	}(compiler)
+	
+
+	oS := os.Getenv("os")
+	if oS == "Windows_NT" {
+       exeType = ".exe"
+    } else {
+        exeType = ".sh"
+    }
+
+
+	if !<-ch1{
+		fmt.Println("gcc is not installed")
+		return
+	}
+
+	close(ch1)
+
+	wg.Wait()
+
 	switch os.Args[1]{
 	case "run":
-		err := runCProgram(true, ".exe")
+		err := runCProgram(true, exeType)
 		if err != nil {
 			fmt.Println(err)
 		}
 	case "build":
-		err := runCProgram(false, ".exe")
+		err := runCProgram(false, exeType)
         if err!= nil {
             fmt.Println(err)
         }

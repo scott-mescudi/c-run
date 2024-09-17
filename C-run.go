@@ -6,7 +6,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
-	"sync"
+	"runtime"
 )
 
 func getPath(filename string) (dir string ,exefilename string ,err error){
@@ -29,10 +29,6 @@ func getPath(filename string) (dir string ,exefilename string ,err error){
 }
 
 func runCProgram(clean bool, ext string) error {
-	if len(os.Args) < 3 { 
-		return fmt.Errorf("error: missing filename")
-	}
-
 	filename := os.Args[2]
 	dir, exefilename, err := getPath(filename)
 	if err != nil {
@@ -74,44 +70,37 @@ func isProgramInstalled(program string) bool {
 	return err == nil
 }
 
+func getExecutableExtension() string {
+	if runtime.GOOS == "windows" {
+		return ".exe"
+	}
+	return ""
+}
+
 func main() {
 	if len(os.Args) < 2{
 		fmt.Println("Error: please provide a flag")
 		return
 	} 
 
-	var(
-	wg sync.WaitGroup
-	exeType string
-	compiler string = "gcc"
-	ch1 = make(chan bool)
-	)
-
-	wg.Add(1)
-	go func(compiler string){
-		defer wg.Done()
-		ch1 <- isProgramInstalled(compiler)
-	}(compiler)
-	
-
-	oS := os.Getenv("os")
-	if oS == "Windows_NT" {
-       exeType = ".exe"
-    } else {
-        exeType = ".sh"
-    }
-
-
-	if !<-ch1{
+	compiler  := "gcc"
+	if !isProgramInstalled(compiler){
 		fmt.Println("gcc is not installed")
 		return
 	}
 
-	close(ch1)
 
-	wg.Wait()
+	command := os.Args[1]
+	if len(os.Args) < 3 && (command == "run" || command == "build") {
+		fmt.Println("Error: missing filename")
+		return
+	}
 
-	switch os.Args[1]{
+	
+
+	exeType := getExecutableExtension()
+
+	switch command {
 	case "run":
 		err := runCProgram(true, exeType)
 		if err != nil {

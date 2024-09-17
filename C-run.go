@@ -27,8 +27,8 @@ func getPath(filename string) (dir string, exefilename string, err error) {
 	return dir, exefilename, nil
 }
 
-func build(filename, exefilename string) error {
-	cmd := exec.Command("gcc", filename, "-o", exefilename)
+func build(filename, exefilename, ext string) error {
+	cmd := exec.Command("gcc", filename, "-o", exefilename+ext)
 	err := cmd.Run()
 	if err != nil {
 		return fmt.Errorf("error compiling C code")
@@ -103,7 +103,7 @@ func main() {
 
 	switch command {
 	case "run":
-		err := build(filename, exefilename)
+		err := build(filename, exefilename, exeType)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -118,7 +118,7 @@ func main() {
 		fmt.Printf("\nExecution time: %v\n", elapsed)
 
 	case "build":
-		err := build(filename, exefilename)
+		err := build(filename, exefilename, exeType)
 		if err != nil {
 			fmt.Println(err)
 		}

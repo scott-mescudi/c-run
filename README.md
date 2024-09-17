@@ -36,28 +36,23 @@ To build the Go-based C Program Runner utility from the source code, follow the 
    ```bash
    go build C-run.go -o c.exe
    ```
+   or for linux:
+      ```bash
+   go build C-run.go -o c.sh
+   ```
 
-   This will generate an executable named `c.exe` in the current directory.
+   This will generate an executable named `c.exe` or `c.sh` in the current directory.
 
 - **Move the executable** to a location in your system's PATH so that it can be run from anywhere. Use the following command to move the executable:
-
+   linux:
    ```bash
-   mv c.exe $path
+   mv c.exe /usr/local/bin/
    ```
 
    Replace `$path` with the directory where you want to place the `c.exe` executable (e.g., `/usr/local/bin/` on Linux/Mac or a path in your Windows environment variables).
 
-### Example
-
-To move the `c.exe` to `/usr/local/bin/` on Linux/Mac, you would run:
-
-```bash
-mv c.exe /usr/local/bin/
-```
 
 ## Usage
-
-
 
 ```
 c <command> <filename>

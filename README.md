@@ -1,119 +1,108 @@
-# C-Run - README
+# C-run
 
-## Overview
-
-This is a Go-based command-line utility designed to compile and run C programs using `gcc`. It simplifies common tasks when working with C code by allowing you to compile, run, and clean up C programs easily.
+This program provides a simple command-line tool to compile and execute C source files, inspired by the `go run` functionality in the Go programming language. It is designed for rapid prototyping and testing of C code snippets. The main features include building a `.c` file into an executable and running that executable directly from the command line.
 
 ## Features
 
-- **Compile and run C programs**: Compile and run a C program with the option to automatically clean up the executable file.
-- **Compile only**: Build the executable without running the program.
-- **Customizable file cleanup**: Optionally remove the compiled file after execution.
+- **Run**: Execute the compiled executable and measure its execution time.
+- **Build**: Compile a C source file into an executable. (gcc is better)
 
 ## Requirements
 
-- **Go**: This utility is written in Go, so you need to have Go installed. Download it from [here](https://golang.org/dl/).
-- **GCC**: The GNU Compiler Collection (GCC) must be installed to compile C programs.
-- **Operating System**: The code uses the `.exe` extension for Windows. For other operating systems, you can adapt the extension as needed.
+- **GCC**.
+- Standard libraries included with GCC.
 
-## Building the Go Program
+## Installation
 
-To build the Go-based C Program Runner utility from the source code, follow these steps:
+### Building the Program
 
-### Prerequisites
+- **Clone the Repository**: Start by cloning the repository to your local machine. Run the following command:
+  ```bash
+  git clone https://github.com/scott-mescudi/c-run.git
+  ```
+- **Navigate to the Project Directory**: Change to the cloned directory:
+  ```bash
+  cd c-run
+  ```
 
-- **Go**: Ensure Go is installed. Download it from [here](https://golang.org/dl/).
-- **GCC**: Ensure GCC is installed to compile C programs.
+- **Compile the Source Code**: Use GCC to compile the program.
+  ```bash
+  gcc main.c -o c.exe
+  ```
 
-### Build Instructions
+- **Move the Executable to your PATH**: 
+  ```bash
+  move c.exe C:\Path\To\Your\Bin
+  ```
 
-- **Navigate to the project directory** where the Go source file (`C-run.go`) is located.
-
-- **Build the Go program** using the following command:
-
-   ```bash
-   go build C-run.go -o c.exe
-   ```
-   For Linux:
-   ```bash
-   go build C-run.go -o c
-   ```
-
-   This will generate an executable named `c.exe` (Windows) or `c` (Linux) in the current directory.
-
-- **Move the executable** to a location in your system's PATH so that it can be run from anywhere. Use the following command for Linux:
-
-   ```bash
-   sudo mv c /usr/local/bin/
-   ```
-
-   For Windows, place `c.exe` in a directory included in your PATH environment variable.
+- **Make the Executable Accessible**: Ensure the directory you moved `c.exe` to is in your system's PATH.
 
 ## Usage
 
-```
-c <command> <filename>
-```
+After successfully building and moving the executable, you can use the tool from the command line.
 
 ### Commands
 
-- **`run`**:
-   - Compiles and runs the specified C program.
-   - Automatically removes the compiled executable after execution.
-
+- **Build a C File**
+   ```bash
+   c.exe build <source_file.c>
    ```
-   c run <filename>
-   ```
-
    Example:
-
-   ```
-   c run hello.c
-   ```
-
-- **`build`**:
-   - Compiles the specified C program without running it.
-   - The compiled executable remains in the working directory.
-
-   ```
-   c build <filename>
+   ```bash
+   c.exe build example.c
    ```
 
+- **Run a C File**
+   ```bash
+   c.exe run <source_file.c>
+   ```
    Example:
-
-   ```
-   c build hello.c
-   ```
-
-### Parameters
-
-- `<command>`: Specifies the action to perform, such as `run` or `build`.
-- `<filename>`: The C file you want to compile or run (e.g., `hello.c`). The file should be located in the same directory or a path accessible to the utility.
-
-## How It Works
-
-- **Compiling C Programs**: The `runCProgram()` function calls GCC to compile the C program using:
-
-   ```
-   gcc <filename> -o <output>
+   ```bash
+   c.exe run example.c
    ```
 
-   The resulting executable file is stored in the same directory as the original C file but without the `.c` extension.
+### Output
 
-- **Running the Program**: If the `run` command is used, the compiled program is executed. After execution, the executable is removed.
+- Upon successfully building a file, an executable named `example.exe` (if the source file was `example.c`) will be created in the same directory.
+- When you run an executable, the program will execute and print the time taken to run the program.
 
-- **File Cleanup**: With the `run` command, the utility will clean up the compiled executable file after execution.
+### Note
+
+- Make sure to provide a valid C source file (`.c`).
+- The executable created will be deleted after execution.
 
 ## Example
 
-To compile and run a C program named `example.c`, run:
+- **Building and Running a Sample Program**:
+   - Create a file `hello.c` with the following content:
+     ```c
+     #include <stdio.h>
+     int main() {
+         printf("Hello, World!\n");
+         return 0;
+     }
+     ```
 
-```bash
-c run example.c
-```
+   - Build it:
+     ```bash
+     c.exe build hello.c
+     ```
 
-To compile the program without running it, use:
+   - Run it:
+     ```bash
+     c.exe run hello.c
+     ```
 
-```bash
-c build example.c
-```
+   - You should see:
+     ```
+     Hello, World!
+     ---------------------------------
+     Time taken: X.XXXXXX seconds
+     ```
+
+## Notes
+
+- The program performs basic validation of the input file to ensure it is a `.c` file.
+- Make sure to have the GCC compiler installed and properly configured on your system to use this tool effectively.
+
+Inspired by the simplicity of `go run`.

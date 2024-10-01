@@ -159,6 +159,8 @@ int main(int argc, char* argv[]) {
         }else{
             printf("Invalid selection");
         }
+    }else{
+        printf("Usage: c-run [build||run] filename\n");
     }
 
     return 0;

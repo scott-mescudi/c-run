@@ -69,7 +69,7 @@ void run(const char* exeFilename, const char* ext){
     }
 
     int i = exists(exeFilename);
-    if (i == -1) {
+    if (i == 1) {
         printf("Executable not found.\n");
         return;
     }

@@ -50,13 +50,13 @@ char* getExeName(const char* filename) {
     return fname;
 }
 
-int exists(const char *fname) {
+bool exists(const char *fname) {
     FILE *file = fopen(fname, "r");
     if (file) {
         fclose(file);
-        return 0;
+        return true;
     }
-    return 1;
+    return false;
 }
 
 void run(const char* exeFilename, const char* ext){
@@ -119,9 +119,9 @@ int main(int argc, char* argv[]) {
     if (argc > 1){
         if (strcmp(argv[1], "build") == 0){
             if (argc > 2){
-                char *result = strstr(argv[2], ".c");
-                
-                if (result) {
+                bool fe = exists(argv[2]);
+                bool result = is_valid_filename(argv[2]);
+                if (result && fe) {
                     char* exeName = getExeName(argv[2]);
                     if (exeName == NULL){
                         printf("Failed to get exename.");
@@ -138,8 +138,9 @@ int main(int argc, char* argv[]) {
 
         }else if (strcmp(argv[1], "run") == 0){
             if (argc > 2){
+                bool fe = exists(argv[2]);
                 bool result = is_valid_filename(argv[2]);
-                if (result) {
+                if (result && fe) {
                     char* exeName = getExeName(argv[2]);
                     if (exeName == NULL){
                         printf("Failed to get exename.");
@@ -152,7 +153,7 @@ int main(int argc, char* argv[]) {
                         free(exeName);
                     }
                 }else{
-                    printf("Invalid file format. Please provide a C source file.\n");
+                    printf("Invalid file.\n");
                 }
             }
         }else{

@@ -31,6 +31,8 @@ void build(const char* filename, const char* exeFilename, const char* ext) {
     return;
 }
 
+
+
 char* getExeName(const char* filename) {
     size_t fsize = strlen(filename);
     char* fname = (char*)malloc(fsize + 1);
@@ -60,7 +62,7 @@ bool exists(const char *fname) {
 }
 
 void run(const char* exeFilename, const char* ext){
-    size_t commandSize = strlen(exeFilename) + strlen(ext) + 1;
+    size_t commandSize = strlen(exeFilename) + strlen(ext) + 5;
     char* command = (char*)malloc(commandSize);
 
     if (command == NULL) {
@@ -68,13 +70,13 @@ void run(const char* exeFilename, const char* ext){
         return;
     }
 
-    int i = exists(exeFilename);
-    if (i == 1) {
+    bool i = exists(exeFilename);
+    if (!i) {
         printf("Executable not found.\n");
         return;
     }
 
-    snprintf(command, commandSize, "%s%s", exeFilename, ext);
+    snprintf(command, commandSize, "./%s%s", exeFilename, ext);
     clock_t start = clock();
     system(command);
     clock_t end = clock();
@@ -115,6 +117,7 @@ int main(int argc, char* argv[]) {
     #else
         char* ext = "";
     #endif
+
 
     if (argc > 1){
         if (strcmp(argv[1], "build") == 0){

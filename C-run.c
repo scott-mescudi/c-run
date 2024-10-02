@@ -54,8 +54,10 @@ char* getExeName(const char* filename) {
 
 bool exists(const char *fname) {
     FILE *file = fopen(fname, "r");
+    
     if (file) {
         fclose(file);
+        printf("File %s exists\n", fname);
         return true;
     }
     return false;
@@ -71,12 +73,17 @@ void run(const char* exeFilename, const char* ext){
     }
 
     bool i = exists(exeFilename);
-    if (!i) {
+    if (i) {
         printf("Executable not found.\n");
         return;
     }
+    #ifdef _WIN32
+        snprintf(command, commandSize, "%s%s", exeFilename, ext);
+    #else
+        snprintf(command, commandSize, "./%s%s", exeFilename, ext);
+    #endif
 
-    snprintf(command, commandSize, "./%s%s", exeFilename, ext);
+
     clock_t start = clock();
     system(command);
     clock_t end = clock();

@@ -57,7 +57,6 @@ bool exists(const char *fname) {
     
     if (file) {
         fclose(file);
-        printf("File %s exists\n", fname);
         return true;
     }
     return false;
@@ -71,12 +70,13 @@ void run(const char* exeFilename, const char* ext){
         printf("Memory allocation failed!\n");
         return;
     }
-
+    
     bool i = exists(exeFilename);
-    if (i) {
+    if (!i) {
         printf("Executable not found.\n");
         return;
     }
+
     #ifdef _WIN32
         snprintf(command, commandSize, "%s%s", exeFilename, ext);
     #else

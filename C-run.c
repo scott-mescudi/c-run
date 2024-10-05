@@ -52,7 +52,7 @@ char* getExeName(const char* filename) {
     return fname;
 }
 
-bool exists(const char *fname) {
+bool exists(const char* fname) {
     FILE *file = fopen(fname, "r");
     
     if (file) {
@@ -70,18 +70,18 @@ void run(const char* exeFilename, const char* ext){
         printf("Memory allocation failed!\n");
         return;
     }
-    
-    bool i = exists(exeFilename);
-    if (!i) {
-        printf("Executable not found.\n");
-        return;
-    }
 
     #ifdef _WIN32
         snprintf(command, commandSize, "%s%s", exeFilename, ext);
     #else
         snprintf(command, commandSize, "./%s%s", exeFilename, ext);
     #endif
+
+    bool i = exists(command);
+    if (!i) {
+        printf("Executable not found.\n");
+        return;
+    }
 
 
     clock_t start = clock();

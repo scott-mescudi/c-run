@@ -5,8 +5,6 @@
 #include <stdbool.h>
 #include <ctype.h>
 
-
-
 #define RESET   "\033[0m"
 #define GREEN   "\033[32m"
 
@@ -16,6 +14,7 @@ void build(const char* filename, const char* exeFilename, const char* ext) {
     
     if (command == NULL) {
         printf("Memory allocation failed!\n");
+        return; // Added return to handle allocation failure
     }
 
     snprintf(command, commandSize, "gcc %s -o %s%s", filename, exeFilename, ext);
@@ -23,15 +22,9 @@ void build(const char* filename, const char* exeFilename, const char* ext) {
     if (res == -1) {
         perror("Error compiling program.");
     }
-    if (command != NULL) {
-        free(command);
-        return;
-    }
 
-    return;
+    free(command);  // Correctly freeing memory
 }
-
-
 
 char* getExeName(const char* filename) {
     size_t fsize = strlen(filename);
@@ -42,7 +35,6 @@ char* getExeName(const char* filename) {
     }
     
     strcpy(fname, filename); 
-
 
     char* dot = strrchr(fname, '.');
     if (dot != NULL && strcmp(dot, ".c") == 0) {
@@ -62,7 +54,7 @@ bool exists(const char* fname) {
     return false;
 }
 
-void run(const char* exeFilename, const char* ext){
+void run(const char* exeFilename, const char* ext) {
     size_t commandSize = strlen(exeFilename) + strlen(ext) + 5;
     char* command = (char*)malloc(commandSize);
 
@@ -77,12 +69,11 @@ void run(const char* exeFilename, const char* ext){
         snprintf(command, commandSize, "./%s%s", exeFilename, ext);
     #endif
 
-    bool i = exists(command);
-    if (!i) {
+    if (!exists(command)) {
         printf("Executable not found.\n");
+        free(command);  // Free memory before returning
         return;
     }
-
 
     clock_t start = clock();
     system(command);
@@ -91,17 +82,16 @@ void run(const char* exeFilename, const char* ext){
     printf("\n---------------------------------");
     printf(GREEN "\nTime taken: %f seconds\n" RESET, time_taken);
 
-
     if (remove(command) != 0) {
         printf("Failed to delete executable.\n");
     }
 
-    if (command != NULL) {
-        free(command);
-    }
-
-
+    free(command);  // Free allocated memory
 }
+
+
+
+
 
 bool is_valid_filename(const char* filename) {
     const char* dot = strrchr(filename, '.');
@@ -118,58 +108,72 @@ bool is_valid_filename(const char* filename) {
     return true;
 }
 
-int main(int argc, char* argv[]) {
+void buildPipe(char *argv[]) {
     #ifdef _WIN32
         char* ext = ".exe";
     #else
         char* ext = "";
     #endif
 
+    if (argv[2] == NULL) {
+        printf("No file provided.\n");
+        return; // Prevents crashes
+    }
 
-    if (argc > 1){
-        if (strcmp(argv[1], "build") == 0){
-            if (argc > 2){
-                bool fe = exists(argv[2]);
-                bool result = is_valid_filename(argv[2]);
-                if (result && fe) {
-                    char* exeName = getExeName(argv[2]);
-                    if (exeName == NULL){
-                        printf("Failed to get exename.");
-                        return 1;
-                    }
-                    build(argv[2], exeName, ext);
-                    if (exeName != NULL){
-                        free(exeName);
-                    }
-                }else{
-                    printf("Invalid file format. Please provide a C source file.\n");
-                }
-            }
-
-        }else if (strcmp(argv[1], "run") == 0){
-            if (argc > 2){
-                bool fe = exists(argv[2]);
-                bool result = is_valid_filename(argv[2]);
-                if (result && fe) {
-                    char* exeName = getExeName(argv[2]);
-                    if (exeName == NULL){
-                        printf("Failed to get exename.");
-                        return 1;
-                    }
-
-                    build(argv[2], exeName, ext);
-                    run(exeName, ext);
-                    if (exeName != NULL){
-                        free(exeName);
-                    }
-                }else{
-                    printf("Invalid file.\n");
-                }
-            }
-        }else{
-            printf("Invalid selection");
+    bool fe = exists(argv[2]);
+    bool result = is_valid_filename(argv[2]);
+    if (result && fe) {
+        char* exeName = getExeName(argv[2]);
+        if (exeName == NULL) {
+            printf("Failed to get exe name.\n");
+            return;
         }
-    }else{
+        build(argv[2], exeName, ext);
+        free(exeName);  // Properly freeing memory
+    } else {
+        printf("Invalid file format. Please provide a C source file.\n");
+    }
+}
+
+void runPipe(char *argv[]) {
+    #ifdef _WIN32
+        char* ext = ".exe";
+    #else
+        char* ext = "";
+    #endif
+
+    if (argv[2] == NULL) {
+        printf("No file provided.\n");
+        return; // Prevents crashes
+    }
+
+    bool fe = exists(argv[2]);
+    bool result = is_valid_filename(argv[2]);
+    if (result && fe) {
+        char* exeName = getExeName(argv[2]);
+        if (exeName == NULL) {
+            printf("Failed to get exe name.\n");
+            return;
+        }
+
+        build(argv[2], exeName, ext);
+        run(exeName, ext);
+        free(exeName);  // Properly freeing memory
+    } else {
+        printf("Invalid file.\n");
+    }
+}
+
+int main(int argc, char* argv[]) {
+    if (argc > 1) {
+        if (strcmp(argv[1], "build") == 0 && argc > 2) {
+           buildPipe(argv);
+        } else if (strcmp(argv[1], "run") == 0 && argc > 2) {
+            runPipe(argv);
+        } else {
+            printf("Invalid selection\n");
+        }
+    } else {
         printf("Usage: c-run [build||run] filename\n");
     }
 

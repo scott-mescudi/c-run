@@ -8,6 +8,8 @@
 #define RESET   "\033[0m"
 #define GREEN   "\033[32m"
 
+// TODO: add args support
+
 void build(const char* filename, const char* exeFilename, const char* ext) {
     size_t commandSize = strlen("gcc ") + strlen(filename) + strlen(" -o ") + strlen(exeFilename) + strlen(ext) + 1;
     char* command = (char*)malloc(commandSize);
@@ -129,7 +131,7 @@ void buildPipe(char *argv[]) {
             return;
         }
         build(argv[2], exeName, ext);
-        free(exeName);  // Properly freeing memory
+        free(exeName);
     } else {
         printf("Invalid file format. Please provide a C source file.\n");
     }
@@ -158,7 +160,7 @@ void runPipe(char *argv[]) {
 
         build(argv[2], exeName, ext);
         run(exeName, ext);
-        free(exeName);  // Properly freeing memory
+        free(exeName);
     } else {
         printf("Invalid file.\n");
     }

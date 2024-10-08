@@ -54,7 +54,6 @@ bool exists(const char* fname) {
 }
 
 void run(char* args, char* exeFilename, char* ext) {
-    
     size_t exenamesize = strlen(exeFilename) + strlen(ext) + 5;
     char *exename = (char*)malloc(exenamesize);
     if (exename == NULL) {
@@ -95,7 +94,7 @@ void run(char* args, char* exeFilename, char* ext) {
     
     if (!exists(exename)) {
         printf("Executable not found.\n");
-        free(command);  // Free memory before returning
+        free(command);
         free(exename);
         return;
     }

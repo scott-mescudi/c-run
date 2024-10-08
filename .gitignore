@@ -2,3 +2,6 @@
 *.exe
 *.go
 test.c
+.vscode
+*.env
+*test2.c

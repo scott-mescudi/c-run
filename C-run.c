@@ -5,9 +5,6 @@
 #include <stdbool.h>
 #include <ctype.h>
 
-#define RESET   "\033[0m"
-#define GREEN   "\033[32m"
-
 // TODO: add args support
 
 void build(const char* filename, const char* exeFilename, const char* ext) {
@@ -56,39 +53,61 @@ bool exists(const char* fname) {
     return false;
 }
 
-void run(const char* exeFilename, const char* ext) {
-    size_t commandSize = strlen(exeFilename) + strlen(ext) + 5;
-    char* command = (char*)malloc(commandSize);
+void run(char* args, char* exeFilename, char* ext) {
+    
+    size_t exenamesize = strlen(exeFilename) + strlen(ext) + 5;
+    char *exename = (char*)malloc(exenamesize);
+    if (exename == NULL) {
+        printf("Memory allocation failed for exename!\n");
+        return;
+    }
+    snprintf(exename, exenamesize, "%s%s", exeFilename, ext);
 
+    size_t commandSize;
+    if (args != NULL){
+        commandSize = strlen(exename) +  strlen(args) + 5;
+    }else{
+        commandSize = strlen(exename) + 5;
+    }
+    
+    char* command = (char*)malloc(commandSize);
     if (command == NULL) {
         printf("Memory allocation failed!\n");
+        free(exename);
         return;
     }
-
-    #ifdef _WIN32
-        snprintf(command, commandSize, "%s%s", exeFilename, ext);
-    #else
-        snprintf(command, commandSize, "./%s%s", exeFilename, ext);
-    #endif
-
-    if (!exists(command)) {
+    
+    
+    if (args != NULL){
+        #ifdef _WIN32
+            snprintf(command, commandSize, "%s %s", exename, args);
+        #else
+            snprintf(command, commandSize, "./%s %s", exename, args);
+        #endif
+    }else{
+        #ifdef _WIN32
+            snprintf(command, commandSize, "%s", exename);
+        #else
+            snprintf(command, commandSize, "./%s", exename);
+        #endif
+    }
+    
+    
+    if (!exists(exename)) {
         printf("Executable not found.\n");
         free(command);  // Free memory before returning
+        free(exename);
         return;
     }
 
-    clock_t start = clock();
+ 
     system(command);
-    clock_t end = clock();
-    double time_taken = (double)(end - start) / CLOCKS_PER_SEC;
-    printf("\n---------------------------------");
-    printf(GREEN "\nTime taken: %f seconds\n" RESET, time_taken);
-
-    if (remove(command) != 0) {
+    if (remove(exename) != 0) {
         printf("Failed to delete executable.\n");
     }
 
-    free(command);  // Free allocated memory
+    free(command);
+    free(exename);
 }
 
 
@@ -137,7 +156,7 @@ void buildPipe(char *argv[]) {
     }
 }
 
-void runPipe(char *argv[]) {
+void runPipe(int argc, char *argv[]) {
     #ifdef _WIN32
         char* ext = ".exe";
     #else
@@ -152,6 +171,43 @@ void runPipe(char *argv[]) {
     bool fe = exists(argv[2]);
     bool result = is_valid_filename(argv[2]);
     if (result && fe) {
+        char *args = NULL;
+        if (argc > 3) {  
+            int size = 0;
+            int capacity = 3;
+
+            args = (char *)malloc(capacity * sizeof(char));
+            if (args == NULL) {
+                printf("Memory allocation failed!\n");
+                return;
+            }
+
+            for (int i = 3; i < argc; i++) {
+                int arg_len = strlen(argv[i]);
+
+                if (size + arg_len + 1 >= capacity) {
+                    capacity = (size + arg_len) * 2;
+                    char *temp = realloc(args, capacity * sizeof(char));
+                    if (temp == NULL) {
+                        printf("Memory reallocation failed!\n");
+                        free(args);
+                        return;
+                    }
+                    args = temp;
+                }
+
+                if (i > 3) {
+                    args[size] = ' ';
+                    size += 1;
+                }
+
+                strcpy(args + size, argv[i]);
+                size += arg_len;
+            }
+
+            args[size] = '\0';
+        }
+
         char* exeName = getExeName(argv[2]);
         if (exeName == NULL) {
             printf("Failed to get exe name.\n");
@@ -159,19 +215,21 @@ void runPipe(char *argv[]) {
         }
 
         build(argv[2], exeName, ext);
-        run(exeName, ext);
+        run(args, exeName, ext);  // Use args here
         free(exeName);
+        if (args) free(args);  // Ensure freeing allocated memory for args
     } else {
         printf("Invalid file.\n");
     }
 }
+
 
 int main(int argc, char* argv[]) {
     if (argc > 1) {
         if (strcmp(argv[1], "build") == 0 && argc > 2) {
            buildPipe(argv);
         } else if (strcmp(argv[1], "run") == 0 && argc > 2) {
-            runPipe(argv);
+            runPipe(argc, argv);
         } else {
             printf("Invalid selection\n");
         }

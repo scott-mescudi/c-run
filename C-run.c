@@ -5,7 +5,6 @@
 #include <stdbool.h>
 #include <ctype.h>
 
-// TODO: add args support
 
 void build(const char* filename, const char* exeFilename, const char* ext) {
     size_t commandSize = strlen("gcc ") + strlen(filename) + strlen(" -o ") + strlen(exeFilename) + strlen(ext) + 1;
@@ -22,7 +21,7 @@ void build(const char* filename, const char* exeFilename, const char* ext) {
         perror("Error compiling program.");
     }
 
-    free(command);  // Correctly freeing memory
+    free(command);  
 }
 
 char* getExeName(const char* filename) {
@@ -214,9 +213,9 @@ void runPipe(int argc, char *argv[]) {
         }
 
         build(argv[2], exeName, ext);
-        run(args, exeName, ext);  // Use args here
+        run(args, exeName, ext);  
         free(exeName);
-        if (args) free(args);  // Ensure freeing allocated memory for args
+        if (args) free(args);  
     } else {
         printf("Invalid file.\n");
     }

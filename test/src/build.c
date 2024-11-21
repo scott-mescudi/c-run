@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <dirent.h>
 
 int checkIfCFile(const char* filename){
    if (strstr(filename, ".c") != NULL){
@@ -75,14 +74,14 @@ int Build(char* filename){
 
 
 
-int LinkBuild(const char* filename, char* linkerfiles){
+int LinkBuild(const char* filename, int argc, char* argv[]){
     int ok = checkIfCFile(filename);
     if (ok != 0){
         return 1;
     }
 
     char* baseFile = stripExtension(filename);
-    
+    char* linkerfiles = GetLinkerFiles(argc, argv);
     
     char* command;
     command = (char*)malloc(strlen(filename)+1 + strlen(baseFile)+1 + strlen("gcc -o") +  strlen(linkerfiles)+1);
@@ -99,33 +98,8 @@ int LinkBuild(const char* filename, char* linkerfiles){
         return 1;
     }
     
+    free(linkerfiles);
     free(command);
     free(baseFile);
     return 0;
-}
-
-char* GetFilesInDir(const char *path) {
-    struct dirent *entry;
-    DIR *dp = opendir(path);
-
-    if (dp == NULL) {
-        perror("opendir");
-        return NULL;
-    }
-
-    char* linkerfiles = calloc(1,1);
-    while ((entry = readdir(dp)) != NULL) {
-        if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0 && strstr(entry->d_name, ".c")) {
-            size_t n = strlen(entry->d_name);
-            size_t currnet = strlen(linkerfiles);
-            size_t total = n + currnet + 2;
-
-            linkerfiles = realloc(linkerfiles, total);
-            strcat(linkerfiles, entry->d_name);
-            strcat(linkerfiles, " ");
-        }
-    }
-
-    closedir(dp);
-    return linkerfiles;
 }

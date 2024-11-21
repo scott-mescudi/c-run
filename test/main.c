@@ -1,30 +1,38 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <dirent.h>
 #include <string.h>
 
+char* GetFilesInDir(const char *path) {
+    struct dirent *entry;
+    DIR *dp = opendir(path);
 
-char* GetLinkerFiles(int argc, char* argv[]){
-    char* linkers = calloc(1,1);
-    for (int i = 0; i < argc; i++){
-        if (strstr(argv[i], ".c") != NULL){
-            size_t size = strlen(argv[i]);
-            size_t linksize = strlen(linkers);
-            size_t total = size + linksize + 2;
+    if (dp == NULL) {
+        perror("opendir");
+        return NULL;
+    }
 
-            linkers = realloc(linkers, total);
-            strcat(linkers, argv[i]);
-            strcat(linkers, " ");
+    char* linkerfiles = calloc(1,1);
+    while ((entry = readdir(dp)) != NULL) {
+        if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0 && strstr(entry->d_name, ".c")) {
+            size_t n = strlen(entry->d_name);
+            size_t currnet = strlen(linkerfiles);
+            size_t total = n + currnet + 2;
+
+            linkerfiles = realloc(linkerfiles, total);
+            strcat(linkerfiles, entry->d_name);
+            strcat(linkerfiles, " ");
         }
     }
 
-    return linkers;
+    closedir(dp);
+    return linkerfiles;
 }
 
-int main(int argc, char* argv[]){
-    char* linkers = GetLinkerFiles(argc, argv);
-   
-    printf("%s\n", linkers);
-    free(linkers);
-
+int main() {
+    const char *dir_path = "./src";
+    char* links = list_files(dir_path);
+    printf("%s\n", links);
     return 0;
 }
+

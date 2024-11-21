@@ -27,7 +27,8 @@ char* stripExtension(const char* filename){
     return baseFilename;
 }
 
-int build(char* filename){
+// gcc -o program Crun.c build.c 
+int Build(char* filename){
     int ok = checkIfCFile(filename);
     if (ok != 0){
         return 1;
@@ -53,3 +54,39 @@ int build(char* filename){
     free(baseFile);
     return 0;
 }
+
+// int LinkBuild(char* filename, char* linkerFiles){
+//     int ok = checkIfCFile(filename);
+//     if (ok != 0){
+//         return 1;
+//     }
+
+//     for (int i = 0; i < strlen(linkerFiles); i++){
+//         printf("%s\n", linkerFiles);
+//     }
+
+//     char* baseFile = stripExtension(filename);
+    
+//     char* command;
+//     command = (char*)malloc(strlen(filename)+1 + strlen(baseFile)+1 + strlen("gcc -o"));
+//     strcpy(command, "gcc -o ");
+//     strcat(command, baseFile);
+//     strcat(command, " ");
+
+    
+//     strcat(command, filename);
+//     strcat(command, " ");
+//     //add linker files here
+
+//     printf("%s\n", command);
+
+//     // if (system(command) != 0){
+//     //     free(command);
+//     //     free(baseFile);
+//     //     return 1;
+//     // }
+
+//     free(command);
+//     free(baseFile);
+//     return 0;
+// }

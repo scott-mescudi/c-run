@@ -1,1 +1,2 @@
-int build(char* filename);
+int Build(char* filename);
+int LinkBuild(char* filename, char* linkerFiles);

@@ -5,3 +5,4 @@ test.c
 .vscode
 *.env
 *test2.c
+makefile

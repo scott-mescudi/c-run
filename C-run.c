@@ -42,6 +42,7 @@ char* getExeName(const char* filename) {
     return fname;
 }
 
+
 bool exists(const char* fname) {
     FILE *file = fopen(fname, "r");
     
@@ -107,10 +108,6 @@ void run(char* args, char* exeFilename, char* ext) {
     free(command);
     free(exename);
 }
-
-
-
-
 
 bool is_valid_filename(const char* filename) {
     const char* dot = strrchr(filename, '.');

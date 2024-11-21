@@ -1,0 +1,37 @@
+commands
+
+c run main.c
+c build main.c
+
+build step:
+check if file is valid c
+get base filename
+run command gcc -o <base filename> <filename>
+
+run step:
+do build step^
+check if exe exists
+get argv
+run exe ./exe <args if present else empty "">
+if finished remove exe
+
+
+// maybes
+Watch Mode:
+Add a mode that watches the source file(s) for changes and recompiles/reruns automatically:
+c run main.c --watch
+
+
+
+commands:
+c clean: Removes any leftover compiled files (.exe or .out) if the program crashes or if the user simply wants to clean up.
+c version: Outputs the version of the utility and potentially details about the GCC version being used.
+c init <project name>: Generates a simple starter template for a C project (e.g., a main.c file with a basic structure).
+
+
+add support for linkg. (Wtf is linking?)
+add suprt for gcc optimizations levels gcc -O2 -o main main.c
+gcc preprocessor flags
+
+
+

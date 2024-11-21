@@ -27,7 +27,24 @@ char* stripExtension(const char* filename){
     return baseFilename;
 }
 
-// gcc -o program Crun.c build.c 
+char* GetLinkerFiles(int argc, char* argv[]){
+    char* linkers = calloc(1,1);
+    for (int i = 0; i < argc; i++){
+        if (strstr(argv[i], ".c") != NULL){
+            size_t size = strlen(argv[i]);
+            size_t linksize = strlen(linkers);
+            size_t total = size + linksize + 2;
+
+            linkers = realloc(linkers, total);
+            strcat(linkers, argv[i]);
+            strcat(linkers, " ");
+        }
+    }
+
+    return linkers;
+}
+
+
 int Build(char* filename){
     int ok = checkIfCFile(filename);
     if (ok != 0){
@@ -55,23 +72,8 @@ int Build(char* filename){
     return 0;
 }
 
-char* GetLinkerFiles(int argc, char* argv[]){
-    char* linkers = calloc(1,1);
-    for (int i = 0; i < argc; i++){
-        if (strstr(argv[i], ".c") != NULL){
-            size_t size = strlen(argv[i]);
-            size_t linksize = strlen(linkers);
-            size_t total = size + linksize + 2;
 
-            linkers = realloc(linkers, total);
-            strcat(linkers, argv[i]);
-            strcat(linkers, " ");
-        }
-    }
 
-    return linkers;
-}
-//gcc Crun.c build.c -o program
 int LinkBuild(const char* filename, int argc, char* argv[]){
     int ok = checkIfCFile(filename);
     if (ok != 0){

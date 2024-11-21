@@ -24,7 +24,7 @@ int BuildPipe(int argc, char* argv[]){
         if (strcmp(argv[2], ".") == 0){
            
             char* linkers = GetFilesInDir(".");
-            if (LinkBuild("linkedapp.c", linkers) != 0){
+            if (LinkBuild("main.c", linkers) != 0){
                 printf("Error building linked executable");
                 free(linkers);
                 return 1;

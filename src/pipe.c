@@ -19,6 +19,7 @@ int BuildPipe(int argc, char* argv[]){
         }
 
         free(linkers);
+        return 0;
     }else{
         if (strcmp(argv[2], ".") == 0){
            
@@ -39,6 +40,5 @@ int BuildPipe(int argc, char* argv[]){
         }
 
     }
-    
     return 0;   
 }

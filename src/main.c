@@ -2,8 +2,19 @@
 #include <string.h>
 
 #include "./header/pipe.h"
+#include "./header/misc.h"
 
 int main(int argc, char* argv[]) {
+    //get gcc version
+    if (strcmp(argv[1], "gcv") == 0){
+        int res = version();
+        if (res != 0){
+            return 1;
+        }
+        return 0;
+    }
+
+    //main build and run logic
     if (argc < 3){
         printf("C [build|run] <filename>");
         return 1;

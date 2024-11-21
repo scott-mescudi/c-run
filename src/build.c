@@ -55,38 +55,49 @@ int Build(char* filename){
     return 0;
 }
 
-// int LinkBuild(char* filename, char* linkerFiles){
-//     int ok = checkIfCFile(filename);
-//     if (ok != 0){
-//         return 1;
-//     }
+char* GetLinkerFiles(int argc, char* argv[]){
+    char* linkers = calloc(1,1);
+    for (int i = 0; i < argc; i++){
+        if (strstr(argv[i], ".c") != NULL){
+            size_t size = strlen(argv[i]);
+            size_t linksize = strlen(linkers);
+            size_t total = size + linksize + 2;
 
-//     for (int i = 0; i < strlen(linkerFiles); i++){
-//         printf("%s\n", linkerFiles);
-//     }
+            linkers = realloc(linkers, total);
+            strcat(linkers, argv[i]);
+            strcat(linkers, " ");
+        }
+    }
 
-//     char* baseFile = stripExtension(filename);
+    return linkers;
+}
+//gcc Crun.c build.c -o program
+int LinkBuild(const char* filename, int argc, char* argv[]){
+    int ok = checkIfCFile(filename);
+    if (ok != 0){
+        return 1;
+    }
+
+    char* baseFile = stripExtension(filename);
+    char* linkerfiles = GetLinkerFiles(argc, argv);
     
-//     char* command;
-//     command = (char*)malloc(strlen(filename)+1 + strlen(baseFile)+1 + strlen("gcc -o"));
-//     strcpy(command, "gcc -o ");
-//     strcat(command, baseFile);
-//     strcat(command, " ");
+    char* command;
+    command = (char*)malloc(strlen(filename)+1 + strlen(baseFile)+1 + strlen("gcc -o") +  strlen(linkerfiles)+1);
+    strcpy(command, "gcc -o ");
+    strcat(command, baseFile);
+    strcat(command, " ");
+    strcat(command, linkerfiles);
 
+
+    if (system(command) != 0){
+        free(linkerfiles);
+        free(command);
+        free(baseFile);
+        return 1;
+    }
     
-//     strcat(command, filename);
-//     strcat(command, " ");
-//     //add linker files here
-
-//     printf("%s\n", command);
-
-//     // if (system(command) != 0){
-//     //     free(command);
-//     //     free(baseFile);
-//     //     return 1;
-//     // }
-
-//     free(command);
-//     free(baseFile);
-//     return 0;
-// }
+    free(linkerfiles);
+    free(command);
+    free(baseFile);
+    return 0;
+}

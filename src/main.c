@@ -4,8 +4,6 @@
 #include "./header/pipe.h"
 #include "./header/misc.h"
 
-
-
 int main(int argc, char* argv[]) {
     if (argc < 2){
         printUsage();

@@ -10,13 +10,11 @@ Watch Mode:
 Add a mode that watches the source file(s) for changes and recompiles/reruns automatically:
 c run main.c --watch
 
-
-
 commands:
 <implemented> c clean: Removes any leftover compiled files (.exe or .out) if the program crashes or if the user simply wants to clean up.
 <implemented> "c build --link <files>": preforms linker build
 <implemented> "c build .": finds all files in . with .c extensions and preforms linker build
-<implemented> c version: Outputs the version of the utility and potentially details about the GCC version being used.
+<implemented> c gcv: Outputs the version of the utility and potentially details about the GCC version being used.
 
 c run .: finds all .c files and link build and run them
 c run <filename>: builds c file and runs it

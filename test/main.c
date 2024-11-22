@@ -3,7 +3,7 @@
 #include <string.h>
 #include <direct.h>
 #include <sys/stat.h>
-
+//hi
 const char DATA[256] = "#include <stdio.h>\n#include <stdlib.h>\n\nint main(int argc, char* argv[]){\n\tprintf(\"Hello, World!\");\n\n\treturn 0;\n}";
 
 void init(char* projectName){

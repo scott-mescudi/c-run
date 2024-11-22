@@ -104,7 +104,7 @@ int LinkBuild(const char* filename, char* linkerfiles){
     return 0;
 }
 
-char* GetFilesInDir(const char *path) {
+char* GetFilesInDir(const char *path, char* fileExtension) {
     struct dirent *entry;
     DIR *dp = opendir(path);
 
@@ -115,7 +115,7 @@ char* GetFilesInDir(const char *path) {
 
     char* linkerfiles = calloc(1,1);
     while ((entry = readdir(dp)) != NULL) {
-        if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0 && strstr(entry->d_name, ".c")) {
+        if (strstr(entry->d_name, fileExtension) != NULL) {
             size_t n = strlen(entry->d_name);
             size_t currnet = strlen(linkerfiles);
             size_t total = n + currnet + 2;

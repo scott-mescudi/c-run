@@ -1,1 +1,2 @@
 int version();
+int clean();

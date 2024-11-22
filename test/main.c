@@ -14,7 +14,7 @@ char* GetFilesInDir(const char *path) {
 
     char* linkerfiles = calloc(1,1);
     while ((entry = readdir(dp)) != NULL) {
-        if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0 && strstr(entry->d_name, ".c")) {
+        if (strstr(entry->d_name, ".c") != NULL) {
             size_t n = strlen(entry->d_name);
             size_t currnet = strlen(linkerfiles);
             size_t total = n + currnet + 2;
@@ -30,8 +30,8 @@ char* GetFilesInDir(const char *path) {
 }
 
 int main() {
-    const char *dir_path = "./src";
-    char* links = list_files(dir_path);
+    const char *dir_path = "../src";
+    char* links = GetFilesInDir(dir_path);
     printf("%s\n", links);
     return 0;
 }

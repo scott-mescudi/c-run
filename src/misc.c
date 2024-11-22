@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "./header/build.h"
+
 int version() {
     int res = system("gcc --version");
     if (res != 0){
@@ -9,4 +11,8 @@ int version() {
     }
 
     return 0;
+}
+
+int clean(){
+    
 }

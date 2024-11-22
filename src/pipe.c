@@ -23,7 +23,7 @@ int BuildPipe(int argc, char* argv[]){
     }else{
         if (strcmp(argv[2], ".") == 0){
            
-            char* linkers = GetFilesInDir(".");
+            char* linkers = GetFilesInDir(".", ".c");
             if (LinkBuild("main.c", linkers) != 0){
                 printf("Error building linked executable");
                 free(linkers);

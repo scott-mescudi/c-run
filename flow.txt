@@ -1,0 +1,27 @@
+run step:
+do build step^
+check if exe exists
+get argv
+run exe ./exe <args if present else empty "">
+if finished remove exe
+
+// maybes
+Watch Mode:
+Add a mode that watches the source file(s) for changes and recompiles/reruns automatically:
+c run main.c --watch
+
+commands:
+<implemented> c clean: Removes any leftover compiled files (.exe or .out) if the program crashes or if the user simply wants to clean up.
+<implemented> "c build --link <files>": preforms linker build
+<implemented> "c build .": finds all files in . with .c extensions and preforms linker build
+<implemented> c gcv: Outputs the version of the utility and potentially details about the GCC version being used
+<implemented> c init <project name>: Generates a simple starter template for a C project (e.g., a main.c file with a basic structure).
+
+<implemented> c run .: finds all .c files and link build and run them
+<implemented> c run <filename>: builds c file and runs it
+
+
+
+
+
+

@@ -20,6 +20,11 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
+    if (strcmp(argv[1], "clean") == 0){
+        clean();
+        return 0;
+    }
+
     //main build and run logic
     if (argc < 3){
         printf("C [build|run] <filename>");

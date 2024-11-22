@@ -4,9 +4,13 @@
 #include "./header/pipe.h"
 #include "./header/misc.h"
 
+void printUsage(){
+    printf("C [build|run] <filename>");
+}
+
 int main(int argc, char* argv[]) {
     if (argc < 2){
-        printf("C [build|run] <filename>");
+        printUsage();
         return 1;  
     }
 
@@ -27,7 +31,7 @@ int main(int argc, char* argv[]) {
 
     //main build and run logic
     if (argc < 3){
-        printf("C [build|run] <filename>");
+        printUsage();
         return 1;
     }
 

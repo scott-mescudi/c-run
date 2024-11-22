@@ -24,14 +24,15 @@ c run main.c --watch
 
 
 commands:
-c clean: Removes any leftover compiled files (.exe or .out) if the program crashes or if the user simply wants to clean up.
-c version: Outputs the version of the utility and potentially details about the GCC version being used.
+added c clean: Removes any leftover compiled files (.exe or .out) if the program crashes or if the user simply wants to clean up.
+added "c build --link <files>": preforms linker build
+added "c build .": finds all files in . with .c extensions and preforms linker build
+added c version: Outputs the version of the utility and potentially details about the GCC version being used.
+c run .: finds all .c files and link build and run them
+c run <filename>: builds c file and runs it
 c init <project name>: Generates a simple starter template for a C project (e.g., a main.c file with a basic structure).
 
 
-add support for linkg. (Wtf is linking?)
-add suprt for gcc optimizations levels gcc -O2 -o main main.c
-gcc preprocessor flags
 
 
 

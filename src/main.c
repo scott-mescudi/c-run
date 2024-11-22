@@ -3,10 +3,9 @@
 
 #include "./header/pipe.h"
 #include "./header/misc.h"
+#include "./header/usage.h"
 
-void printUsage(){
-    printf("C [build|run] <filename>");
-}
+
 
 int main(int argc, char* argv[]) {
     if (argc < 2){

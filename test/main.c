@@ -14,7 +14,7 @@ char* GetFilesInDir(const char *path) {
 
     char* linkerfiles = calloc(1,1);
     while ((entry = readdir(dp)) != NULL) {
-        if (strstr(entry->d_name, ".c") != NULL) {
+        if (strstr(entry->d_name, ".c") != NULL || strstr(entry->d_name, ".h") != NULL) {
             size_t n = strlen(entry->d_name);
             size_t currnet = strlen(linkerfiles);
             size_t total = n + currnet + 2;

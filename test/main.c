@@ -1,38 +1,46 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <dirent.h>
 #include <string.h>
+#include <direct.h>
+#include <sys/stat.h>
 
-char* GetFilesInDir(const char *path) {
-    struct dirent *entry;
-    DIR *dp = opendir(path);
+const char DATA[256] = "#include <stdio.h>\n#include <stdlib.h>\n\nint main(int argc, char* argv[]){\n\tprintf(\"Hello, World!\");\n\n\treturn 0;\n}";
 
-    if (dp == NULL) {
-        perror("opendir");
-        return NULL;
+void init(char* projectName){
+    if (strlen(projectName) >= 200){
+        printf("[-] Project name is too big '%s'", projectName);
+        return;
     }
 
-    char* linkerfiles = calloc(1,1);
-    while ((entry = readdir(dp)) != NULL) {
-        if (strstr(entry->d_name, ".c") != NULL || strstr(entry->d_name, ".h") != NULL) {
-            size_t n = strlen(entry->d_name);
-            size_t currnet = strlen(linkerfiles);
-            size_t total = n + currnet + 2;
+    if (mkdir(projectName) == 0) { 
+        printf("[+] Successfully initialize '%s'.\n", projectName);
+    } else {
+        printf("[-] Error creating directory '%s'", projectName);
+        return;
+    }
 
-            linkerfiles = realloc(linkerfiles, total);
-            strcat(linkerfiles, entry->d_name);
-            strcat(linkerfiles, " ");
+    const char* subdirs[] = {"header", "src", "bin"} ;
+    for (int i = 0; i < sizeof(subdirs) / sizeof(subdirs[0]); i++){
+        char subDirPath[256];
+        snprintf(subDirPath, sizeof(subDirPath), "%s/%s", projectName, subdirs[i]);
+
+        if (mkdir(subDirPath) == 0) { 
+            printf("[+] Successfully created subdirectory '%s' inside project '%s'.\n", subDirPath, projectName);
+        } else {
+            printf("[-] Error creating subdirectory '%s'.\n", subDirPath);
+            return;
         }
     }
 
-    closedir(dp);
-    return linkerfiles;
+    char filename[256];
+    snprintf(filename, sizeof(filename), "%s/%s", projectName, "main.c");
+    FILE* fptr;
+    fptr = fopen(filename, "w");
+    fprintf(fptr, DATA);
+    fclose(fptr);
 }
 
 int main() {
-    const char *dir_path = "../src";
-    char* links = GetFilesInDir(dir_path);
-    printf("%s\n", links);
-    return 0;
+    init("sigma");
 }
 

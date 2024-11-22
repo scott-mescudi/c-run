@@ -3,6 +3,7 @@
 
 #include "./header/pipe.h"
 #include "./header/misc.h"
+#
 
 int main(int argc, char* argv[]) {
     if (argc < 2){
@@ -25,10 +26,19 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
+    if (strcmp(argv[1], "version") == 0){
+        printf("Version 2.0.0");
+        return 0;
+    }
+
     //main build and run logic
     if (argc < 3){
         printUsage();
         return 1;
+    }
+
+    if (strcmp(argv[1], "init") == 0){
+        init(argv[2]);
     }
 
     if (strcmp(argv[1], "build") == 0){

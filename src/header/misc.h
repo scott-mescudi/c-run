@@ -1,4 +1,4 @@
 int version();
 void clean();
-void init();
+void init(char* projectName);
 void printUsage();

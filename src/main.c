@@ -3,7 +3,7 @@
 
 #include "./header/pipe.h"
 #include "./header/misc.h"
-#
+
 
 int main(int argc, char* argv[]) {
     if (argc < 2){
@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
     if (strcmp(argv[1], "gcv") == 0){
         int res = version();
         if (res != 0){
-            printf("[-] Failed to get gcc version");
+            printf("[-] Failed to get gcc version\n");
             return 1;
         }
         return 0;
@@ -31,6 +31,11 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
+    if (strcmp(argv[1], "help") == 0){
+        printUsage();
+        return 0;
+    }
+
     // 3+ args 
     if (argc < 3){
         printUsage();
@@ -42,14 +47,23 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
-    if (strcmp(argv[1], "build") == 0){
-        int res = BuildPipe(argc, argv);
+    if (strcmp(argv[1], "run") == 0){
+        int res = RunPipe(argc, argv);
         if(res != 0){
-            printf("[-] Failed to compiled binary");
             return 1;
         }
 
-        printf("[+] Compiled binary");
+        return 0;
+    }
+
+    if (strcmp(argv[1], "build") == 0){
+        int res = BuildPipe(argc, argv);
+        if(res != 0){
+            printf("[-] Failed to compiled binary\n");
+            return 1;
+        }
+
+        printf("[+] Compiled binary\n");
         return 0;
     }
 

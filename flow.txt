@@ -17,8 +17,8 @@ commands:
 <implemented> c gcv: Outputs the version of the utility and potentially details about the GCC version being used
 <implemented> c init <project name>: Generates a simple starter template for a C project (e.g., a main.c file with a basic structure).
 
-c run .: finds all .c files and link build and run them
-c run <filename>: builds c file and runs it
+<implemented> c run .: finds all .c files and link build and run them
+<implemented> c run <filename>: builds c file and runs it
 
 
 

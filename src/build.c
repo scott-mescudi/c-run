@@ -78,6 +78,7 @@ int Build(char* filename){
 int LinkBuild(const char* filename, char* linkerfiles){
     int ok = checkIfCFile(filename);
     if (ok != 0){
+        printf("here");// debug
         return 1;
     }
 
@@ -91,7 +92,7 @@ int LinkBuild(const char* filename, char* linkerfiles){
     strcat(command, " ");
     strcat(command, linkerfiles);
 
-
+    
     if (system(command) != 0){
         free(linkerfiles);
         free(command);

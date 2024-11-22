@@ -12,7 +12,7 @@ void build(const char* filename, const char* exeFilename, const char* ext) {
     
     if (command == NULL) {
         printf("Memory allocation failed!\n");
-        return; // Added return to handle allocation failure
+        return;
     }
 
     snprintf(command, commandSize, "gcc %s -o %s%s", filename, exeFilename, ext);

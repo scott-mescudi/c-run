@@ -11,7 +11,7 @@ int main(int argc, char* argv[]) {
         return 1;  
     }
 
-    //get gcc version
+    // 2 args
     if (strcmp(argv[1], "gcv") == 0){
         int res = version();
         if (res != 0){
@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
-    //main build and run logic
+    // 3+ args 
     if (argc < 3){
         printUsage();
         return 1;
@@ -39,6 +39,7 @@ int main(int argc, char* argv[]) {
 
     if (strcmp(argv[1], "init") == 0){
         init(argv[2]);
+        return 0;
     }
 
     if (strcmp(argv[1], "build") == 0){
@@ -49,6 +50,7 @@ int main(int argc, char* argv[]) {
         }
 
         printf("[+] Compiled binary");
+        return 0;
     }
 
     return 0;

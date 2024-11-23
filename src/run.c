@@ -35,13 +35,11 @@ char* getargs(int argc, char* argv[]){
 int run(char* filename, char* args){
     if (Build(filename) != 0){
         printf("[-] Failed to compile binary");
-        return 0;
+        return 1;
     }
 
     char* basefile = stripExtension(filename);
     
-
-
     size_t total = strlen(args)+9;
     char* command = (char*)malloc(total);
     snprintf(command, total, "%s%s%s %s", pre, basefile, ext ,args);
@@ -63,6 +61,7 @@ int run(char* filename, char* args){
     remove(cont);
     free(command);
     free(basefile);
+    return 0;
 }
 
 
@@ -80,8 +79,6 @@ int Linkrun(char* args){
         free(linker);
         return 1;
     }
-
-
 
     size_t total = strlen(args)+9;
     char* command = (char*)malloc(total);
@@ -104,5 +101,6 @@ int Linkrun(char* args){
     remove(cont);
     free(command);
     free(linker);
+    return 0;
 }
 

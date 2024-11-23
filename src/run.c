@@ -70,11 +70,15 @@ int run(char* filename, char* args){
 int Linkrun(char* args){
     char* basefile = "main";
     char* linker = GetFilesInDir(".", ".c");
+    if (strlen(linker) == 0){
+        printf("[-] no 'C' files detected in current directory\n");
+        return 1;
+    }
 
     if (LinkBuild("main.c", linker) != 0){
-        printf("[-] Failed to compile linked binary");
+        printf("[-] Failed to compile linked binary\n");
         free(linker);
-        return 0;
+        return 1;
     }
 
 

@@ -47,7 +47,7 @@ int run(char* filename, char* args){
     snprintf(command, total, "%s%s%s %s", pre, basefile, ext ,args);
     
 
-    char cont[200] = "";
+    char cont[100] = "";
     strcat(cont, basefile);
     strcat(cont, ext);
     strcat(cont, "\0");

@@ -4,11 +4,16 @@
 #include <dirent.h>
 
 int checkIfCFile(const char* filename){
-   if (strstr(filename, ".c") != NULL){
-        return 0;
-   }
+    if (strlen(filename) > 100){
+        printf("Filename is too large");
+        return 1;
+    }
 
-   return 1;
+    if (strstr(filename, ".c") != NULL){
+            return 0;
+    }
+
+    return 1;
 }
 
 char* stripExtension(const char* filename){

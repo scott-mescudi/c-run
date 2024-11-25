@@ -49,7 +49,6 @@ int run(char* filename, char* args){
     strcat(cont, basefile);
     strcat(cont, ext);
     strcat(cont, "\0");
-    printf("%s\n", cont);// debug
 
     if (system(command) != 0){
         remove(cont);

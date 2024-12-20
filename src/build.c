@@ -5,7 +5,6 @@
 
 int checkIfCFile(const char* filename){
     if (strlen(filename) > 100){
-        printf("Filename is too large");
         return 1;
     }
 
@@ -140,6 +139,5 @@ char* GetFilesInDir(const char *path, char* fileExtension) {
         return NULL;
     }
 
-    printf("%i\n", strlen(linkerfiles));
     return linkerfiles;
 }

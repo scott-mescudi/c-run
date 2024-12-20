@@ -60,8 +60,8 @@ int Build(char* filename){
     char* baseFile = stripExtension(filename);
     
     char* command;
-    command = (char*)malloc(strlen(filename)+1 + strlen(baseFile)+1 + strlen("gcc -o"));
-    strcpy(command, "gcc -o ");
+    command = (char*)malloc(strlen(filename)+1 + strlen(baseFile)+1 + strlen("gcc -O3 -o"));
+    strcpy(command, "gcc -O3 -o");
     strcat(command, baseFile);
     strcat(command, " ");
     strcat(command, filename);
@@ -83,7 +83,6 @@ int Build(char* filename){
 int LinkBuild(const char* filename, char* linkerfiles){
     int ok = checkIfCFile(filename);
     if (ok != 0){
-        printf("here");// debug
         return 1;
     }
 
@@ -91,15 +90,17 @@ int LinkBuild(const char* filename, char* linkerfiles){
     
     
     char* command;
-    command = (char*)malloc(strlen(filename)+1 + strlen(baseFile)+1 + strlen("gcc -o") +  strlen(linkerfiles)+1);
-    strcpy(command, "gcc -o ");
+    command = (char*)malloc(strlen(filename)+1 + strlen(baseFile)+1 + strlen("gcc -O3 -o") +  strlen(linkerfiles)+1);
+    strcpy(command, "gcc -O3 -o ");
     strcat(command, baseFile);
     strcat(command, " ");
     strcat(command, linkerfiles);
 
     
     if (system(command) != 0){
-        free(linkerfiles);
+        if (linkerfiles != NULL) {
+              free(linkerfiles);
+        }
         free(command);
         free(baseFile);
         return 1;
@@ -133,5 +134,12 @@ char* GetFilesInDir(const char *path, char* fileExtension) {
     }
 
     closedir(dp);
+
+    if (strlen(linkerfiles) == 0) {
+        free(linkerfiles);
+        return NULL;
+    }
+
+    printf("%i\n", strlen(linkerfiles));
     return linkerfiles;
 }

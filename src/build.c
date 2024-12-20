@@ -105,7 +105,7 @@ int LinkBuild(const char* filename, char* linkerfiles){
         return 1;
     }
     
-    free(linker);
+    
     free(command);
     free(baseFile);
     return 0;

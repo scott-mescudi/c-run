@@ -27,11 +27,8 @@ int BuildPipe(int argc, char* argv[]){
             }
             
             if (LinkBuild("main.c", linkers) != 0){
-                free(linkers);
                 return 1;
             }
-
-            free(linkers);
             return 0;
         }
 

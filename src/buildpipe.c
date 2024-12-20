@@ -25,6 +25,7 @@ int BuildPipe(int argc, char* argv[]){
             if (linkers == NULL) {
                 return 1;
             }
+            
             if (LinkBuild("main.c", linkers) != 0){
                 free(linkers);
                 return 1;

@@ -76,7 +76,6 @@ int Linkrun(char* args){
 
     if (LinkBuild("main.c", linker) != 0){
         printf("[-] Failed to compile linked binary\n");
-        free(linker);
         return 1;
     }
 
@@ -93,14 +92,12 @@ int Linkrun(char* args){
     if (system(command) != 0){
         remove(cont);
         free(command);
-        free(linker);
         return 1;
     }
 
 
     remove(cont);
     free(command);
-    free(linker);
     return 0;
 }
 

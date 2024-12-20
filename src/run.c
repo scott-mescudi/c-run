@@ -66,7 +66,7 @@ int run(char* filename, char* args){
 
 
 int Linkrun(char* args){
-    char* basefile = "main";
+    char* basefile = "temp-c-run-executable";
     char* linker = GetFilesInDir(".", ".c");
     if (linker == NULL){
         printf("[-] no 'C' files detected in current directory\n");
@@ -74,7 +74,7 @@ int Linkrun(char* args){
     }
 
 
-    if (LinkBuild("main.c", linker) != 0){
+    if (LinkBuild("temp-c-run-executable.c", linker) != 0){
         printf("[-] Failed to compile linked binary\n");
         return 1;
     }
@@ -84,7 +84,7 @@ int Linkrun(char* args){
     snprintf(command, total, "%s%s%s %s", pre, basefile, ext ,args);
     
 
-    char cont[20] = "";
+    char cont[30] = "";
     strcat(cont, basefile);
     strcat(cont, ext);
 

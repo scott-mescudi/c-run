@@ -142,3 +142,50 @@ char* GetFilesInDir(const char *path, char* fileExtension) {
 
     return linkerfiles;
 }
+
+char* RecursiveGetFilesInDir(const char* path, char* fileExtension) {
+    struct dirent *entry;
+    DIR *dp = opendir(path);
+
+    if (dp == NULL) {
+        return NULL;
+    }
+
+    if (path == NULL || fileExtension == NULL) {
+        return NULL;
+    }
+
+    char* linkerfiles = calloc(1,1);
+    while ((entry = readdir(dp)) != NULL) {
+        if (strlen(entry->d_name) > strlen(fileExtension) && strcmp(entry->d_name + strlen(entry->d_name) - strlen(fileExtension), fileExtension) == 0) {
+            size_t n = strlen(entry->d_name) + strlen(path)+1;
+            size_t currnet = strlen(linkerfiles);
+            size_t total = n + currnet + 2;
+
+            linkerfiles = realloc(linkerfiles, total);
+            strcat(linkerfiles, path);
+            strcat(linkerfiles, "/");
+            strcat(linkerfiles, entry->d_name);
+            strcat(linkerfiles, " ");
+        }else if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0) {
+            size_t ss = strlen(path) + strlen(entry->d_name) + 2;
+            char* dirmem = malloc(ss);
+            snprintf(dirmem, ss, "%s/%s", path, entry->d_name);
+
+            char* rcf = RecursiveGetFilesInDir(dirmem, ".c");
+            if (rcf) {
+                size_t n = strlen(rcf) + 1;
+                size_t currnet = strlen(linkerfiles) + 1;
+                size_t total = n + currnet + 2;
+                linkerfiles = realloc(linkerfiles, total);
+                strcat(linkerfiles, " ");
+                strcat(linkerfiles, rcf);
+            }
+
+            free(dirmem);
+        }
+    }
+
+    closedir(dp);
+    return linkerfiles;
+}

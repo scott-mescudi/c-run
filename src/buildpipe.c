@@ -18,9 +18,19 @@ int BuildPipe(int argc, char* argv[]){
 
         free(linkers);
         return 0;
+        
+    } else if (strcmp(argv[2], "./...") == 0) {
+        char* linkers = RecursiveGetFilesInDir(".", ".c");
+        if (linkers == NULL) {
+            return 1;
+        }
+        
+        if (LinkBuild("main.c", linkers) != 0){
+            return 1;
+        }
+        return 0;
     }else{
         if (strcmp(argv[2], ".") == 0){
-           
             char* linkers = GetFilesInDir(".", ".c");
             if (linkers == NULL) {
                 return 1;

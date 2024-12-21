@@ -65,9 +65,15 @@ int run(char* filename, char* args){
 
 
 
-int Linkrun(char* args){
+int Linkrun(int recursive, char* args){
     char* basefile = "temp-c-run-executable";
-    char* linker = GetFilesInDir(".", ".c");
+    char* linker;
+    if (recursive == 1) {
+        linker = GetFilesInDir(".", ".c");
+    }else{
+        linker = RecursiveGetFilesInDir(".", ".c");
+    }
+    
     if (linker == NULL){
         printf("[-] no 'C' files detected in current directory\n");
         return 1;
@@ -79,7 +85,7 @@ int Linkrun(char* args){
         return 1;
     }
 
-    size_t total = strlen(args)+9;
+    size_t total = strlen(args)+9 + strlen(basefile) + 1;
     char* command = (char*)malloc(total);
     snprintf(command, total, "%s%s%s %s", pre, basefile, ext ,args);
     
@@ -100,4 +106,3 @@ int Linkrun(char* args){
     free(command);
     return 0;
 }
-

@@ -9,9 +9,15 @@
 int RunPipe(int argc, char* argv[]){
     char * filename = argv[2];
     int isLinker = 1;
+    int rec = 1;
 
     if (strcmp(filename, ".") == 0){
         isLinker = 0;
+    }
+
+    if (strcmp(filename, "./...") == 0){
+        isLinker = 0;
+        rec = 0;
     }
 
     if (argc == 3){
@@ -19,7 +25,7 @@ int RunPipe(int argc, char* argv[]){
         if(isLinker == 1){
             res = run(filename, " ");
         }else{
-            res = Linkrun(" ");    
+            res = Linkrun(rec," ");    
         }
 
         if (res != 0){
@@ -36,7 +42,7 @@ int RunPipe(int argc, char* argv[]){
         if(isLinker == 1){
             res = run(filename, args);
         }else{
-            res = Linkrun(args);    
+            res = Linkrun(rec, args);    
         }
         
         if (res != 0){
